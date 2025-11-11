@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Buon anniversario — Per te</title>
+  
+  <link rel="stylesheet" href="style.css"> 
+  
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <header>
+        <small class="lead">Per la rossa piu bella del mondo</small>
+        <h1>Buon anniversario, amore mio ❤️</h1>
+        <p class="lead">Una piccola sorpresa fatta da me per noi — ricordando i momenti più belli.</p>
+      </header>
+
+      <section class="gallery" aria-label="Galleria di ricordi">
+        <div class="carousel" id="carousel1">
+          <img src="elena3.jpg" alt="I nostri primi giorni assieme" class="active" />
+          <img src="elena4.jpg" alt="I nostri primi giorni assieme" />
+          <img src="elena5.jpg" alt="I nostri primi giorni assieme" />
+          <button class="arrow left">❮</button>
+          <button class="arrow right">❯</button>
+          <div class="caption">I nostri primi giorni assieme</div>
+        </div>
+
+        <div class="carousel" id="carousel2">
+          <img src="elena1.jpg" alt="Quando abbiamo riso fino alle lacrime" class="active" />
+          <img src="elena2.jpg" alt="Quando abbiamo riso fino alle lacrime" />
+          <button class="arrow left">❮</button>
+          <button class="arrow right">❯</button>
+          <div class="caption">Quando abbiamo riso fino alle lacrime</div>
+        </div>
+      </section>
+
+<div class="center">
+  <a href="gratta_amore.html" class="love-btn pulsing-btn" aria-label="Clicca qui se mi ami">
+      💌 Clicca qui se mi ami
+  </a>
+</div>
+
+
+      <footer>
+        <small></small>
+      </footer>
+    </div>
+  </div>
+
+  <script>
+    function setupCarousel(id, interval=4000){
+      const carousel = document.getElementById(id);
+      const imgs = carousel.querySelectorAll('img');
+      const left = carousel.querySelector('.left');
+      const right = carousel.querySelector('.right');
+      let index = 0;
+      function show(i){ imgs.forEach((img,n)=>img.classList.toggle('active',n===i)); }
+      function next(){ index=(index+1)%imgs.length; show(index); }
+      function prev(){ index=(index-1+imgs.length)%imgs.length; show(index); }
+      left.addEventListener('click',prev);
+      right.addEventListener('click',next);
+      setInterval(next,interval);
+    }
+
+    setupCarousel('carousel1');
+    setupCarousel('carousel2');
+  </script>
+</body>
+</html>

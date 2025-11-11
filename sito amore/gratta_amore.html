@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Un Messaggio Segreto per Te, Amore</title>
+  <style>
+    /* Tutto il CSS in un unico blocco per gratta_amore.html */
+    :root {
+      --accent: #ff6b9a;
+      --text: #2b2b2b;
+    }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background-color: #fef5f7; 
+      font-family: 'Inter', sans-serif;
+      text-align: center;
+      /* --- CORREZIONE: Imposto la posizione relativa sul body --- */
+      position: relative; 
+      padding: 0; /* Rimuovo padding per centraggio perfetto */
+    }
+    
+    /* --- STILE TASTO TORNA INDIETRO (ANIMATO) --- */
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      background: linear-gradient(135deg, #ff3b7a, var(--accent)); 
+      color: white;
+      padding: 14px 24px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 1.05rem;
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      box-shadow: 0 6px 15px rgba(255, 59, 122, 0.4);
+      /* --- POSIZIONO IL BOTTONE SOTTO IL CENTRO --- */
+      position: absolute; 
+      bottom: 20px; 
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+    }
+    .back-btn:hover {
+        background: linear-gradient(135deg, var(--accent), #ff3b7a);
+        box-shadow: 0 10px 25px rgba(255, 59, 122, 0.6);
+        transform: translate(-50%, -2px) scale(1.02);
+        animation: heart-pulse 1.5s infinite alternate;
+    }
+    @keyframes heart-pulse {
+        from { transform: translate(-50%, -2px) scale(1.02); }
+        to { transform: translate(-50%, -4px) scale(1.05); }
+    }
+
+    /* --- STILE GRATTA E VINCI (CENTRAGGIO CORRETTO) --- */
+    .scratch-container {
+        width: 600px; 
+        min-height: 350px;
+        border: 2px solid #ff6b9a;
+        border-radius: 15px;
+        overflow: hidden;
+
+        /* --- CENTRAGGIO ASSOLUTO PERFETTO --- */
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%); /* Muove l'elemento del 50% della sua larghezza/altezza all'indietro */
+    }
+    .hidden-text {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly; 
+        align-items: center;
+        background-color: white;
+        padding: 60px; 
+        z-index: 1;
+    }
+    #scratchCanvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 2;
+        cursor: pointer;
+    }
+    .instruction {
+        color: white; 
+        font-weight: bold;
+        padding: 5px 10px;
+        background-color: rgba(0, 0, 0, 0.3);
+        border-radius: 5px;
+        position:absolute; 
+        top:10px; 
+        left:50%; 
+        transform:translateX(-50%); 
+        z-index:3;
+        pointer-events: none;
+        transition: opacity 0.5s; 
+    }
+    
+    .hidden-text h2 { color:#ff6b9a; font-size: 2.5rem; margin-top: 0; }
+    
+    .hidden-text p { 
+        color:var(--text); 
+        font-size: 1.1rem; 
+        line-height: 1.6; 
+        text-align: center;
+        max-width: 80%;    
+        margin: 10px auto; 
+    }
+    .signature { margin-top: 20px; font-style: italic; color:#ff6b9a; font-weight: 600; }
+
+    /* --- GESTIONE SCHERMI PIÙ PICCOLI (Mobile) --- */
+    @media (max-width: 700px) {
+        .scratch-container {
+            width: 90%; 
+            min-height: 300px;
+        }
+        .hidden-text {
+            padding: 30px; 
+        }
+        .hidden-text p {
+             max-width: 95%;
+        }
+    }
+  </style>
+</head>
+<body>
+  
+  <div class="scratch-container">
+      
+      <div class="hidden-text">
+          <h2>Sei il Mio Tutto! ❤️</h2>
+          <p>Amore mio, hai grattato! Ogni giorno passato con te è il più bel regalo che la vita potesse farmi.</p>
+          <p>Ti amo più di ogni cosa al mondo.</p>
+          <p class="signature">Il tuo, sempre tuo, XXX</p>
+      </div>
+
+      <p class="instruction" id="scratchInstruction">GRATTA PER LEGGERE IL MESSAGGIO</p>
+      <canvas id="scratchCanvas"></canvas>
+      
+  </div>
+
+  <a href="anniversario_sito.html" class="back-btn">
+    ⬅️ Torna ai Ricordi
+  </a>
+  
+  <script>
+    // Codice JavaScript per l'effetto Grattare
+    const canvas = document.getElementById('scratchCanvas');
+    const instruction = document.getElementById('scratchInstruction'); 
+    let hasScratched = false; 
+    
+    if (canvas) {
+        const ctx = canvas.getContext('2d');
+        
+        let isDrawing = false;
+        
+        const container = document.querySelector('.scratch-container');
+        canvas.width = container.offsetWidth; 
+        canvas.height = container.offsetHeight;
+
+        function drawCover() {
+            ctx.fillStyle = '#ff6b9a'; 
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+        
+        function scratch(x, y) {
+            if (!hasScratched) {
+                instruction.style.opacity = '0';
+                setTimeout(() => instruction.style.display = 'none', 500); 
+                hasScratched = true;
+            }
+
+            ctx.globalCompositeOperation = 'destination-out';
+            ctx.beginPath();
+            ctx.arc(x, y, 30, 0, 2 * Math.PI); 
+            ctx.fill();
+        }
+        
+        function scratchEvent(e) {
+            const rect = canvas.getBoundingClientRect();
+            const x = (e.clientX || e.pageX) - rect.left;
+            const y = (e.clientY || e.pageY) - rect.top;
+            scratch(x, y);
+        }
+        
+        // Eventi per il mouse (Desktop)
+        canvas.addEventListener('mousedown', (e) => { isDrawing = true; scratchEvent(e); });
+        canvas.addEventListener('mouseup', () => isDrawing = false);
+        canvas.addEventListener('mousemove', (e) => {
+            if (!isDrawing) return;
+            scratchEvent(e);
+        });
+
+        // Eventi per il touch (Mobile)
+        canvas.addEventListener('touchstart', (e) => {
+            isDrawing = true;
+            e.preventDefault();
+            scratchEvent(e.touches[0]);
+        });
+        canvas.addEventListener('touchend', () => isDrawing = false);
+        canvas.addEventListener('touchmove', (e) => {
+            if (!isDrawing) return;
+            e.preventDefault();
+            scratchEvent(e.touches[0]);
+        });
+
+        drawCover();
+    }
+  </script>
+</body>
+</html>
